@@ -1,5 +1,11 @@
-import { test } from "./modules/test.js";
+import { createServer } from 'http';
 
-const message: string = 'Hello NodeJS';
-console.log(message);
-test('test.ts');
+const PORT = 4000;
+const PID = process.pid;
+const server = createServer((req,res)=>{
+    console.log("started");
+});
+
+server.listen(PORT, () =>
+	console.log(`server listenning on ${PORT} with ${PID} PID`)
+);
