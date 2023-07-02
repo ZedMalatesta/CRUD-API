@@ -1,0 +1,29 @@
+{
+  "name": "crud-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "npx nodemon",
+    "start:build": "node scripts/rmdir.js && npx tsc",
+    "start:prod": "npm run start:build && node build/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zeddikus97/CRUD-API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Zeddikus97/CRUD-API/issues"
+  },
+  "homepage": "https://github.com/Zeddikus97/CRUD-API#readme",
+  "devDependencies": {
+    "@types/node": "^20.3.3",
+    "nodemon": "^2.0.22",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  }
+}
