@@ -5,7 +5,7 @@ interface IUser {
     readonly id: string;
     username: string;
     age: number;
-    hobbies: [];
+    hobbies: Array<string>;
     validateUser(user:Partial<User>): boolean;
 }
 

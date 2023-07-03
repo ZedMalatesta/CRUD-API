@@ -13,7 +13,5 @@ const server = createServer((req,res)=>{
 });*/
 
 app.listen(PORT, () =>   {
-    let newuser = new User('Denis', 34, []);
-    console.log(newuser)
 	console.log(`server listenning on ${PORT} with ${PID} PID`)
 });
