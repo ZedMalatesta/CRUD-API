@@ -6,7 +6,6 @@ interface IUser {
     username: string;
     age: number;
     hobbies: Array<string>;
-    validateUser(user:Partial<User>): boolean;
 }
 
 export class User implements IUser{
@@ -22,9 +21,12 @@ export class User implements IUser{
         this.hobbies = hobbies;
     }
 
-    validateUser(user: Partial<User>): boolean{
-        return typeof user.username === "string"
+    static validateUser(user: any): boolean{
+        return user['username']
+        && typeof user.username === "string"
+        && user['age']
         && typeof user.age === "number"
+        && user['hobbies']
         && Array.isArray(user.hobbies)
     }
 }

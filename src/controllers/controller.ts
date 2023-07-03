@@ -1,13 +1,15 @@
 import { IncomingMessage, ServerResponse } from "http";
 import { User } from "../models/User.js";
 import { UserRepo } from "../repository/repository.js";
-import { parserJSON } from "../helpers/parser.js";
+import { parseRequest } from "../helpers/parser.js";
+import { StatusCodes, ResponceMessages } from "../constants/constants.js";
 
 interface IUserController {
     bdManager: UserRepo;
     getAllUsers(req:IncomingMessage, res:ServerResponse): Promise<void>;
+    createUser(req:IncomingMessage, res:ServerResponse): Promise<void>;
     getUserById(req:IncomingMessage, res:ServerResponse): Promise<void>;
-    handleResponce(res:ServerResponse, status:number, data:string): void;
+    handleResponce(res:ServerResponse, status:number, data:string, header:string): void;
 }
 
 export class UserController implements IUserController{
@@ -17,21 +19,47 @@ export class UserController implements IUserController{
         this.bdManager = db;
     }
 
-    getUserById(req: IncomingMessage, res: ServerResponse<IncomingMessage>): Promise<void> {
-        throw new Error("Method not implemented.");
-    }
 
-    getAllUsers = async (req:IncomingMessage, res:ServerResponse) =>{
+    getAllUsers = async (req:IncomingMessage, res:ServerResponse): Promise<void> =>{
         try{
             const result = await this.bdManager.getAll();
-            if(result) this.handleResponce(res, 200, JSON.stringify(result));
+            if(result) this.handleResponce(res, StatusCodes.OK, JSON.stringify(result), 'application/json');
+            else throw new Error();
         }
         catch{
-            this.handleResponce(res, 500, 'Internal server error')
+            this.handleResponce(res, StatusCodes.INTERNAL_ERROR, ResponceMessages.INTERNAL_ERROR_MESSAGE, 'plain/text')
         }
     }
 
-    handleResponce(res:ServerResponse, status:number, data:string): void{
+    createUser = async (req: IncomingMessage, res: ServerResponse<IncomingMessage>): Promise<void> => {
+        try{
+            const user_string = await parseRequest(req);
+            const user = JSON.parse(user_string);
+            const validate = User.validateUser(user);
+            if(validate){
+                const newUser = new User(user['username'], user['age'], user['hobbies'])
+                const result = await this.bdManager.createUser(newUser);
+                this.handleResponce(res, StatusCodes.CREATED, JSON.stringify(result), 'application/json')
+            }
+            else this.handleResponce(res, StatusCodes.INVALID_DATA, ResponceMessages.INVALID_DATA, 'plain/text')
+        }
+        catch{
+            this.handleResponce(res, StatusCodes.INTERNAL_ERROR, ResponceMessages.INTERNAL_ERROR_MESSAGE, 'plain/text')
+        }
+    }
+
+
+    getUserById = async (req: IncomingMessage, res: ServerResponse<IncomingMessage>): Promise<void> => {
+        try{
+            throw new Error("Method not implemented.");
+        }
+        catch{
+            this.handleResponce(res, StatusCodes.INTERNAL_ERROR, ResponceMessages.INTERNAL_ERROR_MESSAGE, 'plain/text')
+        }
+    }
+
+    handleResponce(res:ServerResponse, status:number, data:string, header:string): void{
+        res.setHeader('Content-Type', header)
         res.statusCode = status;
         res.end(data);
     }
