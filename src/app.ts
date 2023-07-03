@@ -1,8 +1,9 @@
 import { createServer } from 'http';
 import { User } from './models/User.js'
 import { server } from './server/server.js';
+import "dotenv/config";
 
-const PORT = 4000;
+const PORT = process.env.PORT;
 const PID = process.pid;
 
 const app = createServer(server())

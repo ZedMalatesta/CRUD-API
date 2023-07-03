@@ -3,6 +3,7 @@ import { UserController } from "../controllers/controller.js";
 import { IncomingMessage, ServerResponse } from "http";
 import { UserRepo } from "../repository/repository.js";
 import { StatusCodes, ResponceMessages } from "../constants/constants.js";
+import { getIdFromUrl } from "../helpers/getid.js";
 
 export const router = async (req: IncomingMessage, res: ServerResponse<IncomingMessage>, repo: UserRepo) => {
     const controller = new UserController(repo);
@@ -12,17 +13,27 @@ export const router = async (req: IncomingMessage, res: ServerResponse<IncomingM
     try{
         console.log('req')
         console.log(req.method)
-        if(req.method === 'GET'){
+        if(!reqUrl) throw new Error();
+        else if(req.method === 'GET'){
             if (reqUrl == "/api/users") {
-                console.log("route")
                 await controller.getAllUsers(req, res);
+
+                reqUrl.split("/").length=3;
             }
-            else if (reqUrl == "/api/users/id") {
-                console.log("route2")
-                await controller.getAllUsers(req, res);
+            else if (getIdFromUrl(reqUrl!)) {
+                await controller.getUserById(req, res, getIdFromUrl(reqUrl!));
             }
             else {
-                console.log("route3")
+                throw new Error();
+            }
+        }
+        else if(req.method === 'POST'){
+            if (reqUrl == "/api/users") {
+                console.log("route4")
+                await controller.createUser(req, res);
+            }
+            else {
+                console.log("route5")
                 throw new Error();
             }
         }
