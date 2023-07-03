@@ -8,8 +8,8 @@
 
 ## Running app in development mode
 
-<code>npm i</code>
+<code>start:dev</code>
 
 ## Running app in product mode
 
-<code>npm i</code>
+<code>start:prod</code>
