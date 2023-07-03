@@ -11,8 +11,6 @@ export const router = async (req: IncomingMessage, res: ServerResponse<IncomingM
     const parsed = parse(req.url!, true)
     const reqUrl = parsed.pathname;
     try{
-        console.log('req')
-        console.log(req.method)
         if(!reqUrl) throw new Error();
         else if(req.method === 'GET'){
             if (reqUrl == "/api/users") {
@@ -29,27 +27,30 @@ export const router = async (req: IncomingMessage, res: ServerResponse<IncomingM
         }
         else if(req.method === 'POST'){
             if (reqUrl == "/api/users") {
-                console.log("route4")
                 await controller.createUser(req, res);
             }
             else {
-                console.log("route5")
                 throw new Error();
             }
         }
-        else if(req.method === 'POST'){
-            if (reqUrl == "/api/users") {
-                console.log("route4")
-                await controller.createUser(req, res);
+        else if(req.method === 'PUT'){
+            if (getIdFromUrl(reqUrl!)) {
+                await controller.updateUserById(req, res, getIdFromUrl(reqUrl!));
             }
             else {
-                console.log("route5")
+                throw new Error();
+            }
+        }
+        else if(req.method === 'DELETE'){
+            if (getIdFromUrl(reqUrl!)) {
+                await controller.deleteUserById(req, res, getIdFromUrl(reqUrl!));
+            }
+            else {
                 throw new Error();
             }
         }
     }
     catch(e){
-        console.log('error route')
         controller.handleResponce(res, StatusCodes.NOT_FOUND, ResponceMessages.NOT_FOUND_ERROR_MESSAGE, 'plain/text')
     }
 }

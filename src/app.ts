@@ -6,7 +6,7 @@ import "dotenv/config";
 const PORT = process.env.PORT;
 const PID = process.pid;
 
-const app = createServer(server())
+export const app = createServer(server())
 /*
 const server = createServer((req,res)=>{
     res.setHeader("Access-Control-Allow-Origin", "*")
