@@ -2,6 +2,7 @@ import { parse } from "url";
 import { UserController } from "../controllers/controller.js";
 import { IncomingMessage, ServerResponse } from "http";
 import { UserRepo } from "../repository/repository.js";
+import { StatusCodes, ResponceMessages } from "../constants/constants.js";
 
 export const router = async (req: IncomingMessage, res: ServerResponse<IncomingMessage>, repo: UserRepo) => {
     const controller = new UserController(repo);
@@ -28,8 +29,6 @@ export const router = async (req: IncomingMessage, res: ServerResponse<IncomingM
         }
     }
     catch{
-        controller.handleResponce(res, 404, 'Not found 2')
-        res.statusCode=404;
-        res.end();
+        controller.handleResponce(res, StatusCodes.NOT_FOUND, ResponceMessages.NOT_FOUND_ERROR_MESSAGE)
     }
 }
