@@ -1,5 +1,18 @@
-import { test } from "./modules/test.js";
+import { createServer } from 'http';
+import { User } from './models/User.js'
+import { server } from './server/server.js';
+import "dotenv/config";
 
-const message: string = 'Hello NodeJS';
-console.log(message);
-test('test.ts');
+const PORT = process.env.PORT;
+const PID = process.pid;
+
+export const app = createServer(server())
+/*
+const server = createServer((req,res)=>{
+    res.setHeader("Access-Control-Allow-Origin", "*")
+    console.log("started");
+});*/
+
+app.listen(PORT, () =>   {
+	console.log(`server listenning on ${PORT} with ${PID} PID`)
+});
